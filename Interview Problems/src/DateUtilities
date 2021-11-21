@@ -1,0 +1,114 @@
+package utility;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class DateUtilities {
+
+	private Date currentDate = new Date();
+
+	private Map<Integer, String> currentMonthDateWithDay;
+
+	private Map<Integer, String> prevMonth;
+
+	// Storing data and months as input
+	String days[] = { "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" };
+	String months[] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER",
+			"OCTOBER", "NOVEMBER", "DECEMBER" };
+
+	
+	List<Map<Integer, String>> weekList= new ArrayList<Map<Integer, String>>();
+	
+	Map<Integer, String> week = new HashMap<Integer, String>();
+
+	// Custom array as input
+	int monthDaysCount[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+	public boolean isLeafYear(int year) {
+		if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// Main driver method
+	public void getCalendar(int theYear, int theMonth) {
+
+		int dayCount = 1;
+		int monthCount = 1;
+		int yearCount = 1;
+		int weekDayCount = 1;
+
+		// Till condition holds true
+		while (true) {
+			if (dayCount == 1 && monthCount == theMonth && yearCount == theYear) {
+				break;
+			}
+			if (isLeafYear(yearCount)) {
+				monthDaysCount[1] = 29;
+			} else {
+				monthDaysCount[1] = 28;
+			}
+			weekDayCount++;
+			dayCount++;
+
+			if (dayCount > monthDaysCount[monthCount - 1]) {
+				monthCount++;
+				dayCount = 1;
+			}
+
+			if (monthCount > 12) {
+				monthCount = 1;
+				yearCount++;
+			}
+
+			if (weekDayCount == 7) {
+				weekDayCount = 0;
+			}
+		}
+
+		int firstDateCount = weekDayCount;
+		
+		System.out.println("Date 1st Day of current Month:"+days[firstDateCount]);
+
+		if (isLeafYear(yearCount)) {
+			monthDaysCount[1] = 29;
+		} else {
+			monthDaysCount[1] = 28;
+		}
+
+		// Print the desired month of input year
+		System.out.println("MONTH:" + months[theMonth - 1]);
+
+		for (int k = 0; k < 7; k++) {
+			System.out.print("\t" + days[k]);
+		}
+
+		System.out.println();
+
+		for (int j = 1; j <= (monthDaysCount[theMonth - 1] + weekDayCount); j++) {
+			if (j > 6) {
+				weekDayCount = weekDayCount % 6;
+			}
+		}
+
+		int spaces = weekDayCount;
+		if (spaces < 0)
+			spaces = 6;
+
+		// Printing the calendar
+		for (int i = 0; i < spaces; i++)
+			System.out.print("\t");
+		for (int i = 1; i <= monthDaysCount[theMonth - 1]; i++) {
+			System.out.printf("\t"+i);
+
+			if (((i + spaces) % 7 == 0) || (i == monthDaysCount[theMonth - 1]))
+				System.out.println();
+		}
+	}
+
+}
